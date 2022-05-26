@@ -81,7 +81,7 @@ namespace n_signature{
   }
 
   static void create(e_signature_style style){
-    if(get_func_num(get_screen_ea()) == 0xFFFFFFFF){
+    if(!(n_settings::data & FLAG_ALLOW_SIG_CREATION_IN_DR) && get_func_num(get_screen_ea()) == 0xFFFFFFFF){
       hide_wait_box();
       warning("[Fusion] `0x%llX` Is not in a valid assembly region.", get_screen_ea());
       return;

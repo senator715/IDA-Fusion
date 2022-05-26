@@ -6,6 +6,7 @@ enum e_settings_flags{
   FLAG_SHOW_MNEMONIC_OPCODES_SIGGED       = 1 << 2, // Shows the mnemonics for all of the byes in the signature
   FLAG_COPY_CREATED_SIGNATURES_TO_CB      = 1 << 3, // Copy any created signatures to the clipboard automatically
   FLAG_INCLUDE_MASK_FOR_CODE_SIGS         = 1 << 4, // Include the mask for code signatures
+  FLAG_ALLOW_SIG_CREATION_IN_DR           = 1 << 5, // Allow signature creation in unknown, dangerous regions (assembly marged in red)
 };
 
 // Extern plugin_run so we can call it
@@ -21,7 +22,8 @@ namespace n_settings{
       "<#Explicitly copy selected bytes only when in a range:C>\n"
       "<#Show mnemonic opcodes when creating signatures:C>\n"
       "<#Copy created signatures to clipboard:C>\n"
-      "<#Include mask for code signatures (xx??xx):C>>\n"
+      "<#Include mask for code signatures (xx??xx):C>\n"
+      "<#Allow signature creation in regions marked as red (DANGEROUS):C>>\n"
     , &data);
 
     plugin_run(0);
