@@ -59,10 +59,10 @@ public:
 
     // Allocate the extra room for the mask
     if(style == SIGNATURE_STYLE_CODE && (n_settings::data & FLAG_INCLUDE_MASK_FOR_CODE_SIGS))
-      sig_len += 2/*, */ + bytes.size();
+      sig_len += bytes.size();
 
     // Allocate room for the signature
-    i8* sig               = malloc(sig_len);
+    i8* sig = malloc(sig_len);
     memset(sig, 0, sig_len);
 
     for(u32 i = 0; i < bytes.size(); i++){
@@ -83,7 +83,8 @@ public:
 
     // Add the code signature mask onto the signature
     if(style == SIGNATURE_STYLE_CODE && (n_settings::data & FLAG_INCLUDE_MASK_FOR_CODE_SIGS)){
-      qsnprintf(sig + strlen(sig), sig_len_per_byte, ", ");
+      // Add a space between the signature and the mask
+      qsnprintf(sig + strlen(sig), sig_len_per_byte, " ");
 
       for(u32 i = 0; i < bytes.size(); i++){
         if((strlen(sig) + sig_len_per_byte) > sig_len){
