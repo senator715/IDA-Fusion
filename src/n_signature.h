@@ -17,9 +17,17 @@ namespace n_signature{
 
     // Handle the conversion of a code style sig to an IDA one if required
     if(strstr(signature.c_str(), "\\x")){
+      // Fistly, convert \x to a space
       signature = std::regex_replace(signature, std::regex("\\\\x"), " ");
-      signature = std::regex_replace(signature, std::regex("00"),    "?");
 
+      // Remove any masks before converting 00's to a ?
+      signature = std::regex_replace(signature, std::regex("x"), "");
+      signature = std::regex_replace(signature, std::regex("\\?"), "");
+
+      // Convert any 00's to ?
+      signature = std::regex_replace(signature, std::regex("00"), "?");
+
+      // Remove first space if there is one
       if(signature[0] == ' ')
         signature.erase(0, 1);
     }
