@@ -210,8 +210,8 @@ public:
         for(ea_t op_addr = addr; op_addr < (addr + insn.size); op_addr++)
           signature_generator.add(get_byte(op_addr), imm_offset > 0 && (op_addr - addr) >= imm_offset);
 
-        // Int 3 instructions are not parsed correctly by ida, so lets fix it
-        if(get_byte(addr) == 0xCC){
+        // These instructions are not parsed correctly by ida, so lets fix it
+        if(get_byte(addr) == 0xCC || get_byte(addr) == 0x90){
           iterator.set_range(addr + 1, ea_max);
           continue;
         }
@@ -258,8 +258,8 @@ public:
           last_found_address = search_result[0];
         }
 
-        // Int 3 instructions are not parsed correctly by ida, so lets fix it
-        if(get_byte(addr) == 0xCC){
+        // These instructions are not parsed correctly by ida, so lets fix it
+        if(get_byte(addr) == 0xCC || get_byte(addr) == 0x90){
           iterator.set_range(addr + 1, ea_max);
           continue;
         }
