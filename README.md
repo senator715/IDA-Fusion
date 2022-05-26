@@ -24,6 +24,9 @@ Some of the future features planned are:
 - Configuration dialog for toggling future and experimental features.
 - Many other features.
 
+# Requirements
+- IDA 7.5 And above
+
 # How to install
 
 1. Download the latest [Release here](https://github.com/senator715/IDA-Fusion/releases) or compile yourself.
