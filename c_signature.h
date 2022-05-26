@@ -250,7 +250,7 @@ public:
 
         // Attempt to search for this signature, if nothing is found then we have a unique signature
         {
-          std::vector<ea_t> search_result = find(signature_generator.render(SIGNATURE_STYLE_CODE), {true, true, target_addr, last_found_address, false});
+          std::vector<ea_t> search_result = find(signature_generator.render(SIGNATURE_STYLE_IDA), {true, true, target_addr, last_found_address, false});
           if(search_result.empty())
             break;
 
