@@ -21,7 +21,7 @@ Some of the future features planned are:
 - CRC Signature generation.
 - Reverse searching to create even smaller signatures. (Would be an option)
 - Reference based signatures. (Would be an option)
-- Configuration dialog for toggling future and experimental features.
+- ~~Configuration dialog for toggling future and experimental features.~~
 - Many other features.
 
 # Requirements
