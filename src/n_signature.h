@@ -29,7 +29,8 @@ namespace n_signature{
       show_wait_box("[Fusion] Searching...");
     }
 
-    ea_t ea_min, ea_max;
+    ea_t ea_min = 0;
+    ea_t ea_max = 0;
     n_utils::get_text_min_max(ea_min, ea_max);
 
     ea_t addr = (settings.start_at_addr > 0 ? settings.start_at_addr : ea_min) - 1;
@@ -78,17 +79,17 @@ namespace n_signature{
       return;
     }
 
-    ea_t ea_min, ea_max;
+    c_signature_generator signature_generator;
+    ea_t                  ea_region_start = 0;
+    ea_t                  ea_region_end   = 0;
+    ea_t                  ea_min          = 0;
+    ea_t                  ea_max          = 0;
     n_utils::get_text_min_max(ea_min, ea_max);
 
-    c_signature_generator signature_generator;
-    ea_t                  ea_start = 0;
-    ea_t                  ea_end   = 0;
-
     // If we have selected a range of assembly code, then specifically sig that code only
-    if(read_range_selection(nullptr, &ea_start, &ea_end)){
+    if(read_range_selection(nullptr, &ea_region_start, &ea_region_end)){
       func_item_iterator_t iterator;
-      iterator.set_range(ea_start, ea_end);
+      iterator.set_range(ea_region_start, ea_region_end);
       for(ea_t addr = iterator.current(); true; addr = iterator.current()){
         insn_t insn;
         if(!decode_insn(&insn, addr))
