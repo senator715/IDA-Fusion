@@ -6,13 +6,13 @@ OBJ_DIR         =obj/
 OBJ_FILES       =$(wildcard $(OBJ_DIR)*.o)
 
 # Include IDA SDK
-COMPILER_FLAGS += -Isdk/include
+COMPILER_FLAGS += -I../sdk/include
 
 # This is the small trick for getting IDA's SDK to compile in GCC
 ifeq ($(BUILD_FOR),32)
-	COMPILER_FLAGS += -Lsdk/lib/x64_win_vc_32
+	COMPILER_FLAGS += -L../sdk/lib/x64_win_vc_32
 else
-	COMPILER_FLAGS += -Lsdk/lib/x64_win_vc_64
+	COMPILER_FLAGS += -L../sdk/lib/x64_win_vc_64
 	COMPILER_FLAGS += -D__EA64__
 endif
 
