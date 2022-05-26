@@ -89,7 +89,6 @@ namespace n_signature{
     if(read_range_selection(nullptr, &ea_start, &ea_end)){
       func_item_iterator_t iterator;
       iterator.set_range(ea_start, ea_end);
-
       for(ea_t addr = iterator.current(); true; addr = iterator.current()){
         insn_t insn;
         if(!decode_insn(&insn, addr))
@@ -116,14 +115,13 @@ namespace n_signature{
       ea_t target_addr        = get_screen_ea();
       ea_t last_found_address = ea_min;
 
-      func_item_iterator_t iterator;
-      iterator.set_range(target_addr, ea_max);
-
       // Generate memory for the mnemonic opcodes list
       u32 mnemonic_opcodes_len  = 5000/*5KB*/;
       i8* mnemonic_opcodes      = (i8*)malloc(mnemonic_opcodes_len);
       memset(mnemonic_opcodes, 0, mnemonic_opcodes_len);
 
+      func_item_iterator_t iterator;
+      iterator.set_range(target_addr, ea_max);
       for(ea_t addr = iterator.current(); true; addr = iterator.current()){
         insn_t insn;
         if(!decode_insn(&insn, addr))
@@ -167,10 +165,19 @@ namespace n_signature{
 
     // Do we have a signature to build?
     if(signature_generator.has_bytes){
+      // Trim the signature
       signature_generator.trim();
+
+      // Create a render of the signature in the selected style
       i8* signature = signature_generator.render(style);
+
+      // Display
       msg("[Fusion] %s\n", signature);
+
+      // Copy to clipboard
       n_utils::copy_to_clipboard(signature);
+
+      // Now free the rendered signature
       free(signature);
 
       beep(beep_default);
