@@ -1,11 +1,9 @@
 #pragma once
 
-enum e_signature_style{
-  SIGNATURE_STYLE_CODE = 0,
-  SIGNATURE_STYLE_IDA  = 1
-};
+// Include our signature generator
+#include "c_signature_generator.h"
 
-struct  s_signature_find_settings{
+struct s_signature_find_settings{
   bool silent             = true;   // Output information
   bool stop_at_first      = false;  // Stop at first found signature
   ea_t ignore_addr        = 0;      // Ignore a selected address
@@ -13,114 +11,8 @@ struct  s_signature_find_settings{
   bool jump_to_found_addr = false;  // Jump to the found address
 };
 
-class c_signature_generator{
-public:
-  bool              has_bytes = false;
-  std::vector<u8>   bytes;
-  std::vector<bool> imm;
-
-  void reset(){
-    bytes.clear();
-    imm.clear();
-
-    has_bytes = false;
-  }
-
-  // Trim the string of any imm signatures at the back and front of the signature
-  void trim(){
-    while(!imm.empty() && imm.back()){
-      bytes.pop_back();
-      imm.pop_back();
-    }
-
-    while(!imm.empty() && imm.front()){
-      bytes.erase(bytes.begin());
-      imm.erase(imm.begin());
-    }
-
-    has_bytes = !bytes.empty();
-  }
-
-  void add(u8 byte, bool is_imm = false){
-    bytes.push_back(byte);
-    imm.push_back(is_imm);
-
-    has_bytes = true;
-  }
-
-  u32 get_sig_len_per_byte(e_signature_style style){
-    if(style == SIGNATURE_STYLE_CODE)
-      return 6;
-
-    if(style == SIGNATURE_STYLE_IDA)
-      return 4;
-
-    error("[Fusion] get_sig_len_per_byte failed with %i\n", style);
-    return -1;
-  }
-
-  i8* render(e_signature_style style){
-    u32 sig_len_per_byte  = get_sig_len_per_byte(style);
-    i32 sig_len           = (bytes.size() * sig_len_per_byte);
-    i8* sig               = malloc(sig_len);
-    memset(sig, 0, sig_len);
-
-    for(u32 i = 0; i < bytes.size(); i++){
-      if((strlen(sig) + sig_len_per_byte) > sig_len){
-        warning("[Fusion] `0x%llX` Has a bugged signature buffer", sig);
-        break;
-      }
-
-      if(style == SIGNATURE_STYLE_IDA){
-        if(i > 0)
-          qsnprintf(sig + strlen(sig), sig_len_per_byte, " ");
-
-        qsnprintf(sig + strlen(sig), sig_len_per_byte, imm[i] ? "?" : "%02X", (u8)bytes[i]);
-      }
-      else if(style == SIGNATURE_STYLE_CODE)
-        qsnprintf(sig + strlen(sig), sig_len_per_byte, imm[i] ? "\\x00" : "\\x%02X", (u8)bytes[i]);
-    }
-
-    return sig;
-  }
-};
-
-class c_signature{
-public:
-  // Fetch imm offset from start of instruction
-  i32 get_insn_imm_offset(insn_t* insn){
-    for(u32 i = 0; i < UA_MAXOP; i++){
-      op_t* op = &insn->ops[i];
-
-      // Instruction contains invalid operand
-      if(op->type == o_void)
-        return 0;
-
-      // Instruction contains relocated address
-      if(op->offb > 0)
-        return op->offb;
-    }
-
-    return 0;
-  }
-
-  void get_text_min_max(ea_t& ea_min, ea_t& ea_max){
-    ea_min = inf_get_min_ea();
-    ea_max = inf_get_max_ea();
-  }
-
-  void copy_to_clipboard(i8* buffer){
-    u32   alloc_len = strlen(buffer) + 1;
-    void* alloc     = GlobalAlloc(GMEM_FIXED, alloc_len);
-    qstrncpy(alloc, buffer, alloc_len);
-
-    OpenClipboard(nullptr);
-    EmptyClipboard();
-    SetClipboardData(CF_TEXT, alloc);
-    CloseClipboard();
-  }
-
-  std::vector<ea_t> find(std::string signature, s_signature_find_settings settings){
+namespace n_signature{
+  static std::vector<ea_t> find(std::string signature, s_signature_find_settings settings){
     std::vector<ea_t> ea;
 
     // Handle the conversion of a code style sig to an IDA one if required
@@ -138,7 +30,7 @@ public:
     }
 
     ea_t ea_min, ea_max;
-    get_text_min_max(ea_min, ea_max);
+    n_utils::get_text_min_max(ea_min, ea_max);
 
     ea_t addr = (settings.start_at_addr > 0 ? settings.start_at_addr : ea_min) - 1;
     while(true){
@@ -179,7 +71,7 @@ public:
     return ea;
   }
 
-  void create(e_signature_style style){
+  static void create(e_signature_style style){
     if(get_func_num(get_screen_ea()) == 0xFFFFFFFF){
       hide_wait_box();
       warning("[Fusion] `0x%llX` Is not in a valid assembly region.", get_screen_ea());
@@ -187,7 +79,7 @@ public:
     }
 
     ea_t ea_min, ea_max;
-    get_text_min_max(ea_min, ea_max);
+    n_utils::get_text_min_max(ea_min, ea_max);
 
     c_signature_generator signature_generator;
     ea_t                  ea_start = 0;
@@ -204,7 +96,7 @@ public:
           break;
 
         // Get the imm offset for this instruction
-        i32 imm_offset = get_insn_imm_offset(&insn);
+        i32 imm_offset = n_utils::get_insn_imm_offset(&insn);
 
         // Now add the bytes to the signature generator
         for(ea_t op_addr = addr; op_addr < (addr + insn.size); op_addr++)
@@ -227,16 +119,18 @@ public:
       func_item_iterator_t iterator;
       iterator.set_range(target_addr, ea_max);
 
+      // Generate memory for the mnemonic opcodes list
       u32 mnemonic_opcodes_len  = 5000/*5KB*/;
       i8* mnemonic_opcodes      = (i8*)malloc(mnemonic_opcodes_len);
       memset(mnemonic_opcodes, 0, mnemonic_opcodes_len);
+
       for(ea_t addr = iterator.current(); true; addr = iterator.current()){
         insn_t insn;
         if(!decode_insn(&insn, addr))
           break;
 
         // Get the imm offset for this instruction
-        i32 imm_offset = get_insn_imm_offset(&insn);
+        i32 imm_offset = n_utils::get_insn_imm_offset(&insn);
 
         // Now add the bytes to the signature generator
         for(ea_t op_addr = addr; op_addr < (addr + insn.size); op_addr++)
@@ -276,12 +170,10 @@ public:
       signature_generator.trim();
       i8* signature = signature_generator.render(style);
       msg("[Fusion] %s\n", signature);
-      copy_to_clipboard(signature);
+      n_utils::copy_to_clipboard(signature);
       free(signature);
 
       beep(beep_default);
     }
   }
 };
-
-extern c_signature* signature;

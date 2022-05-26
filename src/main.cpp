@@ -12,12 +12,12 @@ bool idaapi plugin_run(size_t arg){
 
   if(choice == 0){
     show_wait_box("[Fusion] Creating CODE signature...");
-    signature->create(SIGNATURE_STYLE_CODE);
+    n_signature::create(SIGNATURE_STYLE_CODE);
     hide_wait_box();
   }
   else if(choice == 1){
     show_wait_box("[Fusion] Creating IDA signature...");
-    signature->create(SIGNATURE_STYLE_IDA);
+    n_signature::create(SIGNATURE_STYLE_IDA);
     hide_wait_box();
   }
   else if(choice == 2){
@@ -28,7 +28,7 @@ bool idaapi plugin_run(size_t arg){
         , &signature_to_find))
       return true;
 
-    signature->find(signature_to_find, {false, false, 0, 0, true});
+    n_signature::find(signature_to_find, {false, false, 0, 0, true});
   }
 
   return true;

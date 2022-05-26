@@ -6,13 +6,13 @@ OBJ_DIR         =obj/
 OBJ_FILES       =$(wildcard $(OBJ_DIR)*.o)
 
 # Include IDA SDK
-COMPILER_FLAGS += -I../sdk/include
+COMPILER_FLAGS += -Isdk/include
 
 # This is the small trick for getting IDA's SDK to compile in GCC
 ifeq ($(BUILD_FOR),32)
-	COMPILER_FLAGS += -L../sdk/lib/x64_win_vc_32
+	COMPILER_FLAGS += -Lsdk/lib/x64_win_vc_32
 else
-	COMPILER_FLAGS += -L../sdk/lib/x64_win_vc_64
+	COMPILER_FLAGS += -Lsdk/lib/x64_win_vc_64
 	COMPILER_FLAGS += -D__EA64__
 endif
 
@@ -21,7 +21,7 @@ LINKER_FLAGS   += -l:ida.lib
 
 # Add core and custom directories to compile list
 CPP_FILES      +=$(wildcard ./sdk/includes/*.cpp)
-CPP_FILES      +=$(wildcard ./*.cpp)
+CPP_FILES      +=$(wildcard ./src/*.cpp)
 
 .PHONY: make_objects $(CPP_FILES)
 
