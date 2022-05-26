@@ -53,14 +53,21 @@ public:
 
   // Memory returned from this function must be free'd
   i8* render(e_signature_style style){
+    // Fetch the signature length per byte
     u32 sig_len_per_byte  = get_sig_len_per_byte(style);
     i32 sig_len           = (bytes.size() * sig_len_per_byte);
+
+    // Allocate the extra room for the mask
+    if(style == SIGNATURE_STYLE_CODE && (n_settings::data & FLAG_INCLUDE_MASK_FOR_CODE_SIGS))
+      sig_len += 2/*, */ + bytes.size();
+
+    // Allocate room for the signature
     i8* sig               = malloc(sig_len);
     memset(sig, 0, sig_len);
 
     for(u32 i = 0; i < bytes.size(); i++){
       if((strlen(sig) + sig_len_per_byte) > sig_len){
-        warning("[Fusion] `0x%llX` Has a bugged signature buffer", sig);
+        warning("[Fusion] `0x%llX` Has a bugged signature buffer (0)", sig);
         break;
       }
 
@@ -72,6 +79,20 @@ public:
       }
       else if(style == SIGNATURE_STYLE_CODE)
         qsnprintf(sig + strlen(sig), sig_len_per_byte, imm[i] ? "\\x00" : "\\x%02X", (u8)bytes[i]);
+    }
+
+    // Add the code signature mask onto the signature
+    if(style == SIGNATURE_STYLE_CODE && (n_settings::data & FLAG_INCLUDE_MASK_FOR_CODE_SIGS)){
+      qsnprintf(sig + strlen(sig), sig_len_per_byte, ", ");
+
+      for(u32 i = 0; i < bytes.size(); i++){
+        if((strlen(sig) + sig_len_per_byte) > sig_len){
+          warning("[Fusion] `0x%llX` Has a bugged signature buffer (1)", sig);
+          break;
+        }
+
+        qsnprintf(sig + strlen(sig), sig_len_per_byte, imm[i] ? "?" : "x");
+      }
     }
 
     return sig;

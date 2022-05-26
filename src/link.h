@@ -18,4 +18,5 @@
 
 // Custom
 #include "n_utils.h"
+#include "n_settings.h"
 #include "n_signature.h"

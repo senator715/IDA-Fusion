@@ -1,34 +1,46 @@
 #include "link.h"
 
 bool idaapi plugin_run(size_t arg){
-  static i32 choice = 0;
-  if(!ask_form(
-        "Fusion\n"
-        "<#Generate signature (CODE Style):R>\n"
-        "<#Generate signature (IDA Style):R>\n"
-        "<#Search for a signature:R>>"
-      , &choice))
+  static i32  choice  = 0;
+  bool        form_ok = ask_form(
+    "Fusion\n"
+    "<#Generate signature (CODE Style):R>\n"
+    "<#Generate signature (IDA Style):R>\n"
+    "<#Search for a signature:R>\n"
+    "<#Configure settings:R>>"
+  , &choice);
+
+  if(!form_ok)
     return true;
 
-  if(choice == 0){
-    show_wait_box("[Fusion] Creating CODE signature...");
-    n_signature::create(SIGNATURE_STYLE_CODE);
-    hide_wait_box();
-  }
-  else if(choice == 1){
-    show_wait_box("[Fusion] Creating IDA signature...");
-    n_signature::create(SIGNATURE_STYLE_IDA);
-    hide_wait_box();
-  }
-  else if(choice == 2){
-    static i8 signature_to_find[1024];
-    if(!ask_form(
-          "[Fusion] Enter signature\n"
-          "<Signature:A5:1024:100>"
-        , &signature_to_find))
-      return true;
+  switch(choice){
+    case 0:{
+      show_wait_box("[Fusion] Creating CODE signature...");
+      n_signature::create(SIGNATURE_STYLE_CODE);
+      hide_wait_box();
+      break;
+    }
+    case 1:{
+      show_wait_box("[Fusion] Creating IDA signature...");
+      n_signature::create(SIGNATURE_STYLE_IDA);
+      hide_wait_box();
+      break;
+    }
+    case 2:{
+      static i8 signature_to_find[1024];
+      if(!ask_form(
+        "Fusion — Enter signature\n"
+        "<Signature:A5:1024:100>"
+      , &signature_to_find))
+        break;
 
-    n_signature::find(signature_to_find, {false, false, 0, 0, true});
+      n_signature::find(signature_to_find, {false, false, 0, 0, n_settings::data & FLAG_AUTO_JUMP_TO_FOUND_SIGNATURES});
+      break;
+    }
+    case 3:{
+      n_settings::show_settings_dialog();
+      break;
+    }
   }
 
   return true;

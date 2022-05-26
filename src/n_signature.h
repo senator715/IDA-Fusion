@@ -12,7 +12,7 @@ struct s_signature_find_settings{
 };
 
 namespace n_signature{
-  static std::vector<ea_t> find(std::string signature, s_signature_find_settings settings){
+  static std::vector<ea_t> find(std::string signature, s_signature_find_settings find_settings){
     std::vector<ea_t> ea;
 
     // Handle the conversion of a code style sig to an IDA one if required
@@ -24,7 +24,7 @@ namespace n_signature{
         signature.erase(0, 1);
     }
 
-    if(!settings.silent){
+    if(!find_settings.silent){
       hide_wait_box();
       show_wait_box("[Fusion] Searching...");
     }
@@ -33,32 +33,32 @@ namespace n_signature{
     ea_t ea_max = 0;
     n_utils::get_text_min_max(ea_min, ea_max);
 
-    ea_t addr = (settings.start_at_addr > 0 ? settings.start_at_addr : ea_min) - 1;
+    ea_t addr = (find_settings.start_at_addr > 0 ? find_settings.start_at_addr : ea_min) - 1;
     while(true){
       addr = find_binary(addr + 1, ea_max, signature.c_str(), 16, SEARCH_DOWN);
 
       if(addr == 0 || addr == BADADDR)
         break;
 
-      if(addr == settings.ignore_addr)
+      if(addr == find_settings.ignore_addr)
         continue;
 
       // Jump to the first address we find
-      if(settings.jump_to_found_addr && ea.empty())
+      if((n_settings::data & FLAG_COPY_SELECTED_BYTES_ONLY_IN_RANGE) && find_settings.jump_to_found_addr && ea.empty())
         jumpto(addr);
 
       ea.push_back(addr);
 
-      if(!settings.silent){
+      if(!find_settings.silent){
         replace_wait_box("[Fusion] Searching...\n\nFound %i signature%s", ea.size(), ea.size() > 1 ? "s" : "");
         msg("[Fusion] %i. Found at address `0x%llX`\n", ea.size(), addr);
       }
 
-      if(settings.stop_at_first)
+      if(find_settings.stop_at_first)
         break;
     }
 
-    if(!settings.silent){
+    if(!find_settings.silent){
       hide_wait_box();
 
       if(ea.empty())
@@ -85,6 +85,9 @@ namespace n_signature{
     ea_t                  ea_min          = 0;
     ea_t                  ea_max          = 0;
     n_utils::get_text_min_max(ea_min, ea_max);
+
+    // Display a status that we are creating a signature for our screen ea
+    replace_wait_box("[Fusion] Creating signature for `0x%llX`");
 
     // If we have selected a range of assembly code, then specifically sig that code only
     if(read_range_selection(nullptr, &ea_region_start, &ea_region_end)){
@@ -118,8 +121,10 @@ namespace n_signature{
 
       // Generate memory for the mnemonic opcodes list
       u32 mnemonic_opcodes_len  = 5000/*5KB*/;
-      i8* mnemonic_opcodes      = (i8*)malloc(mnemonic_opcodes_len);
-      memset(mnemonic_opcodes, 0, mnemonic_opcodes_len);
+      i8* mnemonic_opcodes      = (n_settings::data & FLAG_SHOW_MNEMONIC_OPCODES_SIGGED) ? (i8*)malloc(mnemonic_opcodes_len) : nullptr;
+
+      if(mnemonic_opcodes != nullptr)
+        memset(mnemonic_opcodes, 0, mnemonic_opcodes_len);
 
       func_item_iterator_t iterator;
       iterator.set_range(target_addr, ea_max);
@@ -136,9 +141,9 @@ namespace n_signature{
           signature_generator.add(get_byte(op_addr), imm_offset > 0 && (op_addr - addr) >= imm_offset);
 
         // Add details on whats going on in relation to this creation
-        {
+        if(n_settings::data & FLAG_SHOW_MNEMONIC_OPCODES_SIGGED){
           qsnprintf(mnemonic_opcodes + strlen(mnemonic_opcodes), mnemonic_opcodes_len - strlen(mnemonic_opcodes), "+ %s\n", insn.get_canon_mnem(ph));
-          replace_wait_box("[Fusion] Creating signature for `0x%llX`\n\n%s\n", target_addr, mnemonic_opcodes);
+          replace_wait_box("[Fusion] Creating signature for `0x%llX`\n\n%s", target_addr, mnemonic_opcodes);
         }
 
         // Attempt to search for this signature, if nothing is found then we have a unique signature
@@ -161,7 +166,8 @@ namespace n_signature{
           break;
       }
 
-      free(mnemonic_opcodes);
+      if(mnemonic_opcodes != nullptr)
+        free(mnemonic_opcodes);
     }
 
     // Do we have a signature to build?
@@ -176,7 +182,8 @@ namespace n_signature{
       msg("[Fusion] %s\n", signature);
 
       // Copy to clipboard
-      n_utils::copy_to_clipboard(signature);
+      if(n_settings::data & FLAG_COPY_CREATED_SIGNATURES_TO_CB)
+        n_utils::copy_to_clipboard(signature);
 
       // Now free the rendered signature
       free(signature);
