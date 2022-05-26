@@ -1,7 +1,8 @@
+![Logo](https://user-images.githubusercontent.com/89423559/170590973-86a0c0dd-2052-49a6-bf03-b2178754c3f6.png)
 # IDA-Fusion
 IDA-Fusion is an ULTRA Fast Signature scanner & creator for IDA7 using GCC.
 
-# Why Fusion?
+# Why IDA-Fusion?
 This project was written due to the lack of stable and working signature scanners available for IDA as a whole, Many of these projects are filled with bugs and create signatures that are not guaranteed to be unique. They are slow and tend to have trouble generating signatures in binaries where parts of the binary have been duplicated to prevent reverse engineering and reliable signature creation.
 
 Some of the highlights of IDA-Fusion project:
@@ -13,6 +14,14 @@ Some of the highlights of IDA-Fusion project:
 - Auto jump to signatures found in a binary.
 - Created signatures are automatically copied to the clipboard.
 - Minimal bloat to increase productivity and speed when using IDA-Fusion.
+
+# How does IDA-Fusion's signature creation work?
+IDA-Fusion works by wild-carding any operand that contains an IMM (Immediate value), For instance, IDA-Fusion will signature the following instruction `lea rax, [rbx+10h]` explicitly as `lea rax, [rbx+?]`, However this does not work entirely the same way a usual signature creator would.
+
+Highlighted in blue, demonstrates what is ommitted when a signature is created:
+![yb2E5w5](https://user-images.githubusercontent.com/89423559/170587870-133ff3c1-e95a-4a20-a9ca-deb1390cbd40.png)
+
+Creating signatures like this ensures that only the opcodes themselves are sigged, this process IDA-Fusion does differ greatly from other signature creation plugins. And is very good at creating reliable signatures for programs that are specifically attempting to implement anti-signature environments.
 
 # Whats planned next?
 We plan to work on many other features and further enhance and optimise IDA-Fusion as much as physically possible. We are always looking for those who are willing to contribute to the project.
