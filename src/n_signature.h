@@ -52,7 +52,7 @@ namespace n_signature{
         continue;
 
       // Jump to the first address we find
-      if((n_settings::data & FLAG_COPY_SELECTED_BYTES_ONLY_IN_RANGE) && find_settings.jump_to_found_addr && ea.empty())
+      if(find_settings.jump_to_found_addr && ea.empty())
         jumpto(addr);
 
       ea.push_back(addr);
@@ -98,7 +98,7 @@ namespace n_signature{
     replace_wait_box("[Fusion] Creating signature for `0x%llX`");
 
     // If we have selected a range of assembly code, then specifically sig that code only
-    if(read_range_selection(nullptr, &ea_region_start, &ea_region_end)){
+    if((n_settings::data & FLAG_COPY_SELECTED_BYTES_ONLY_IN_RANGE) && read_range_selection(nullptr, &ea_region_start, &ea_region_end)){
       func_item_iterator_t iterator;
       iterator.set_range(ea_region_start, ea_region_end);
       for(ea_t addr = iterator.current(); true; addr = iterator.current()){
