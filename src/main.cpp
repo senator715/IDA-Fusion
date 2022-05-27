@@ -56,7 +56,7 @@ EXTERN plugin_t PLUGIN = {
   plugin_init,
   nullptr,
   plugin_run,
-  "ULTRA Fast Signature scanner & creator for IDA7 written in GCC",
+  "ULTRA Fast Signature scanner & creator for IDA7 written with GCC",
   "https://github.com/senator715/IDA-Fusion",
   "Fusion",
   "Ctrl-Alt-S"
