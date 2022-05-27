@@ -34,7 +34,7 @@ bool idaapi plugin_run(size_t arg){
       , &signature_to_find))
         break;
 
-      n_signature::find(signature_to_find, {false, false, 0, 0, n_settings::data & FLAG_AUTO_JUMP_TO_FOUND_SIGNATURES});
+      n_signature::find(signature_to_find, {false, n_settings::data & FLAG_STOP_AT_FIRST_SIGNATURE_FOUND, 0, 0, n_settings::data & FLAG_AUTO_JUMP_TO_FOUND_SIGNATURES});
       break;
     }
     case 3:{
