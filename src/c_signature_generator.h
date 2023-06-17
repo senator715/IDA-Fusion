@@ -75,7 +75,7 @@ public:
         if(i > 0)
           qsnprintf(sig + strlen(sig), sig_len_per_byte, " ");
 
-        qsnprintf(sig + strlen(sig), sig_len_per_byte, imm[i] ? "?" : "%02X", (u8)bytes[i]);
+        qsnprintf(sig + strlen(sig), sig_len_per_byte, imm[i] ? ((n_settings::data & FLAG_USE_DUAL_QUESTION_MARKS) ? "??" : "?") : "%02X", (u8)bytes[i]);
       }
       else if(style == SIGNATURE_STYLE_CODE)
         qsnprintf(sig + strlen(sig), sig_len_per_byte, imm[i] ? "\\x00" : "\\x%02X", (u8)bytes[i]);
