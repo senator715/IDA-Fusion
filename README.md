@@ -1,12 +1,12 @@
 ![Logo](https://user-images.githubusercontent.com/89423559/170590973-86a0c0dd-2052-49a6-bf03-b2178754c3f6.png)
 # IDA-Fusion
-IDA-Fusion is an ULTRA Fast Signature scanner & creator for IDA7 using GCC.
+IDA-Fusion is an ULTRA Fast Signature scanner & creator for IDA7 & IDA8+ using GCC.
 
 # Why IDA-Fusion?
 This project was written due to the lack of stable and working signature scanners/creators available for IDA as a whole, Many of these projects are filled with bugs and create signatures that are not guaranteed to be unique. They are slow and tend to have trouble generating signatures in binaries where parts of the binary have been duplicated to prevent reverse engineering and reliable signature creation.
 
 Some of the highlights of IDA-Fusion project:
-- Written in GCC
+- Uses GCC
 - Very efficient creation and search algorithms.
 - Signatures are guaranteed to be unique while delivering minimal size.
 - Search for signatures quickly through large binaries.
