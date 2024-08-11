@@ -31,7 +31,7 @@ namespace n_signature{
       if(signature[0] == ' ')
         signature.erase(0, 1);
     }
-
+    
     if(!find_settings.silent){
       hide_wait_box();
       show_wait_box("[Fusion] Searching...");
@@ -41,9 +41,12 @@ namespace n_signature{
     ea_t ea_max = 0;
     n_utils::get_text_min_max(ea_min, ea_max);
 
+    compiled_binpat_vec_t sig_data{};
+    parse_binpat_str(&sig_data, ea_min, signature.c_str(), 16);
+
     ea_t addr = (find_settings.start_at_addr > 0 ? find_settings.start_at_addr : ea_min) - 1;
     while(true){
-      addr = find_binary(addr + 1, ea_max, signature.c_str(), 16, SEARCH_DOWN);
+      addr = bin_search3(addr + 1, ea_max, sig_data, BIN_SEARCH_NOCASE | BIN_SEARCH_FORWARD);
 
       if(addr == 0 || addr == BADADDR)
         break;
