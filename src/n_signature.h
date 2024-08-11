@@ -150,7 +150,7 @@ namespace n_signature{
 
         // Add details on whats going on in relation to this creation
         if(n_settings::data & FLAG_SHOW_MNEMONIC_OPCODES_SIGGED){
-          qsnprintf(mnemonic_opcodes + strlen(mnemonic_opcodes), mnemonic_opcodes_len - strlen(mnemonic_opcodes), "+ %s\n", insn.get_canon_mnem(*get_ph()));
+          qsnprintf(mnemonic_opcodes + strlen(mnemonic_opcodes), mnemonic_opcodes_len - strlen(mnemonic_opcodes), "+ %s\n", insn.get_canon_mnem(PH));
           replace_wait_box("[Fusion] Creating signature for `0x%llX`\n\n%s", target_addr, mnemonic_opcodes);
         }
 
