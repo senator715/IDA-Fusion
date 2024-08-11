@@ -25,7 +25,7 @@ namespace n_utils{
   inline void copy_to_clipboard(i8* buffer){
     u32   alloc_len = strlen(buffer) + 1;
     void* alloc     = GlobalAlloc(GMEM_FIXED, alloc_len);
-    qstrncpy(alloc, buffer, alloc_len);
+    qstrncpy(reinterpret_cast<i8*>(alloc), buffer, alloc_len);
 
     OpenClipboard(nullptr);
     EmptyClipboard();

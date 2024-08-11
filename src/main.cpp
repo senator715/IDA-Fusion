@@ -34,7 +34,7 @@ bool idaapi plugin_run(size_t arg){
       , &signature_to_find))
         break;
 
-      n_signature::find(signature_to_find, {false, n_settings::data & FLAG_STOP_AT_FIRST_SIGNATURE_FOUND, 0, 0, n_settings::data & FLAG_AUTO_JUMP_TO_FOUND_SIGNATURES});
+      n_signature::find(signature_to_find, {false, static_cast<bool>(n_settings::data & FLAG_STOP_AT_FIRST_SIGNATURE_FOUND), 0, 0, static_cast<bool>(n_settings::data & FLAG_AUTO_JUMP_TO_FOUND_SIGNATURES)});
       break;
     }
     case 3:{
@@ -52,7 +52,7 @@ plugmod_t* idaapi plugin_init(void){
 
 EXTERN plugin_t PLUGIN = {
   IDP_INTERFACE_VERSION,
-  PLUGIN_KEEP,
+  PLUGIN_MOD | PLUGIN_PROC,
   plugin_init,
   nullptr,
   plugin_run,

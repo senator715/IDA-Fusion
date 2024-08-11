@@ -62,7 +62,7 @@ public:
       sig_len += bytes.size();
 
     // Allocate room for the signature
-    i8* sig = malloc(sig_len);
+    i8* sig = reinterpret_cast<i8*>(malloc(sig_len));
     memset(sig, 0, sig_len);
 
     for(u32 i = 0; i < bytes.size(); i++){
