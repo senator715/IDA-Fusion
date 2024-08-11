@@ -52,7 +52,7 @@ plugmod_t* idaapi plugin_init(void){
 
 EXTERN plugin_t PLUGIN = {
   IDP_INTERFACE_VERSION,
-  PLUGIN_MOD | PLUGIN_PROC,
+  PLUGIN_PROC,
   plugin_init,
   nullptr,
   plugin_run,
