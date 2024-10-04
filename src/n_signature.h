@@ -46,7 +46,7 @@ namespace n_signature{
     compiled_binpat_vec_t sig_data{};
     parse_binpat_str(&sig_data, addr, signature.c_str(), 16);
     while(true){
-      addr = bin_search3(addr + 1, ea_max, sig_data, BIN_SEARCH_NOCASE | BIN_SEARCH_FORWARD);
+      addr = bin_search(addr + 1, ea_max, sig_data, BIN_SEARCH_NOCASE | BIN_SEARCH_FORWARD);
 
       if(addr == 0 || addr == BADADDR)
         break;
