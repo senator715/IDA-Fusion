@@ -44,10 +44,17 @@ Some of the future features planned are:
 
 # How to compile
 
+## Using make
 1. Download GCC (Preferably MSYS2)
 2. Drag your IDA's `idasdk7.x.zip` contents into the `sdk` folder in IDA-Fusion
 3. To avoid confusion, it is advisable to modify the copy directories in the following files: `compile32.bat` and `compile64.bat`
 4. To compile IDA-Fusion for x86 & x64 IDA. run `compile.bat`
+
+## Using Visual Studio
+**Initial support cannot compile for x86 and has not been tested for IDA SDK versions lower to 9.0!**
+1. Drag your IDA's `idasdk90.7z` contents into the `sdk` folder in IDA-Fusion
+2. Set platform to x64 and compile
+3. Compiled files will be written to the `out` folder
 
 # Contributions
 

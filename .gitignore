@@ -1,3 +1,7 @@
+.vs/
+out/
+intermediaries/
+
 *.dll
 *.zip
 sdk
