@@ -43,10 +43,17 @@ namespace n_signature{
 
     ea_t addr = (find_settings.start_at_addr > 0 ? find_settings.start_at_addr : ea_min) - 1;
 
+#if IDA_SDK_VERSION >= 900
     compiled_binpat_vec_t sig_data{};
     parse_binpat_str(&sig_data, addr, signature.c_str(), 16);
+#endif
+
     while(true){
-      addr = bin_search(addr + 1, ea_max, sig_data, BIN_SEARCH_NOCASE | BIN_SEARCH_FORWARD);
+#if IDA_SDK_VERSION >= 900
+      addr = bin_search3(addr + 1, ea_max, sig_data, BIN_SEARCH_NOCASE | BIN_SEARCH_FORWARD);
+#else
+      addr = find_binary(addr + 1, ea_max, signature.c_str(), 16, SEARCH_DOWN);
+#endif
 
       if(addr == 0 || addr == BADADDR)
         break;
