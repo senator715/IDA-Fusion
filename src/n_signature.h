@@ -28,7 +28,7 @@ namespace n_signature{
       signature = std::regex_replace(signature, std::regex("00"), "?");
 
       // Remove first space if there is one
-      if(signature[0] == ' ')
+      if(!signature.empty() && signature[0] == ' ')
         signature.erase(0, 1);
     }
     

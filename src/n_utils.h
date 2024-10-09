@@ -25,11 +25,22 @@ namespace n_utils{
   inline void copy_to_clipboard(i8* buffer){
     u32   alloc_len = strlen(buffer) + 1;
     void* alloc     = GlobalAlloc(GMEM_FIXED, alloc_len);
-    qstrncpy(reinterpret_cast<i8*>(alloc), buffer, alloc_len);
+    qstrncpy((i8*)alloc, buffer, alloc_len);
 
     OpenClipboard(nullptr);
     EmptyClipboard();
     SetClipboardData(CF_TEXT, alloc);
     CloseClipboard();
+  }
+
+  inline std::string format(i8* fmt, ...) {
+    i8 buffer[1024];
+  
+    va_list args;
+    va_start(args, fmt);
+    vsnprintf(buffer, 1024, fmt, args);
+    va_end(args);
+  
+    return std::string(buffer);
   }
 };
