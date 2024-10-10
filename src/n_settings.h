@@ -3,7 +3,7 @@
 enum e_settings_flags{
   FLAG_AUTO_JUMP_TO_FOUND_SIGNATURES      = 1 << 0, // Auto jump to the first signature address found
   FLAG_COPY_SELECTED_BYTES_ONLY_IN_RANGE  = 1 << 1, // When a region is selected in the current screen view, explicitly create a signature for these bytes
-  FLAG_SHOW_MNEMONIC_OPCODES_SIGGED       = 1 << 2, // Shows the mnemonics for all of the byes in the signature
+  FLAG_SHOW_MNEMONIC_OPCODES_SIGGED       = 1 << 2, // Shows the mnemonics for all of the bytes in the signature
   FLAG_COPY_CREATED_SIGNATURES_TO_CB      = 1 << 3, // Copy any created signatures to the clipboard automatically
   FLAG_INCLUDE_MASK_FOR_CODE_SIGS         = 1 << 4, // Include the mask for code signatures
   FLAG_ALLOW_SIG_CREATION_IN_DR           = 1 << 5, // Allow signature creation in unknown, dangerous regions (assembly marked in red)
