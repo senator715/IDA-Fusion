@@ -78,7 +78,7 @@ public:
         qsnprintf(sig + strlen(sig), sig_len_per_byte, imm[i] ? ((n_settings::data & FLAG_USE_DUAL_QUESTION_MARKS) ? "??" : "?") : "%02X", (u8)bytes[i]);
       }
       else if(style == SIGNATURE_STYLE_CODE)
-        qsnprintf(sig + strlen(sig), sig_len_per_byte, imm[i] ? "\\x00" : "\\x%02X", (u8)bytes[i]);
+        qsnprintf(sig + strlen(sig), sig_len_per_byte, imm[i] ? ((n_settings::data & FLAG_USE_UNICODE_WILDCARD) ? "\\x2A" : "\\x00") : "\\x%02X", (u8)bytes[i]);
     }
 
     // Add the code signature mask onto the signature
