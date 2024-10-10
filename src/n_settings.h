@@ -9,6 +9,7 @@ enum e_settings_flags{
   FLAG_ALLOW_SIG_CREATION_IN_DR           = 1 << 5, // Allow signature creation in unknown, dangerous regions (assembly marged in red)
   FLAG_STOP_AT_FIRST_SIGNATURE_FOUND      = 1 << 6, // Stop searching after one signature has been found
   FLAG_USE_DUAL_QUESTION_MARKS            = 1 << 7, // Use "??" as wildcard instead of "?" for IDA style signatures
+  FLAG_USE_UNICODE_WILDCARD               = 1 << 8, // Use "2A" as wildcard instead of "00" for CODE style signatures
 };
 
 // Extern plugin_run so we can call it
@@ -27,7 +28,8 @@ namespace n_settings{
       "<#Include mask for code signatures (xx??xx):C>\n"
       "<#Allow signature creation in regions marked as red (DANGEROUS):C>\n"
       "<#Do not return multiple results for signature searches:C>\n"
-      "<#Use \"??\" as wildcard for IDA style signatures:C>>\n"
+      "<#Use \"??\" as wildcard for IDA style signatures:C>\n"
+      "<#Use \"2A\" as wildcard for CODE style signatures:C>>\n"
     , &data);
 
     plugin_run(0);
