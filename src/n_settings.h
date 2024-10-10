@@ -6,7 +6,7 @@ enum e_settings_flags{
   FLAG_SHOW_MNEMONIC_OPCODES_SIGGED       = 1 << 2, // Shows the mnemonics for all of the byes in the signature
   FLAG_COPY_CREATED_SIGNATURES_TO_CB      = 1 << 3, // Copy any created signatures to the clipboard automatically
   FLAG_INCLUDE_MASK_FOR_CODE_SIGS         = 1 << 4, // Include the mask for code signatures
-  FLAG_ALLOW_SIG_CREATION_IN_DR           = 1 << 5, // Allow signature creation in unknown, dangerous regions (assembly marged in red)
+  FLAG_ALLOW_SIG_CREATION_IN_DR           = 1 << 5, // Allow signature creation in unknown, dangerous regions (assembly marked in red)
   FLAG_STOP_AT_FIRST_SIGNATURE_FOUND      = 1 << 6, // Stop searching after one signature has been found
   FLAG_USE_DUAL_QUESTION_MARKS            = 1 << 7, // Use "??" as wildcard instead of "?" for IDA style signatures
 };
