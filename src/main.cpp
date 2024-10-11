@@ -2,7 +2,7 @@
 
 bool idaapi plugin_run(size_t arg){
   std::string form_str = n_utils::format(
-    "IDA-Fusion for IDA %.1f+\n"
+    "IDA-Fusion for %.1f+\n"
     "<#Generate signature (CODE Style):R>\n"
     "<#Generate signature (IDA Style):R>\n"
     "<#Generate signature (CRC-32 Style):R>\n"
