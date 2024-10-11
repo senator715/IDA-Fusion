@@ -166,7 +166,14 @@ namespace n_signature{
 
         // Attempt to search for this signature, if nothing is found then we have a unique signature
         {
-          std::vector<ea_t> search_result = find(signature_generator.render(SIGNATURE_STYLE_IDA), {true, true, target_addr, last_found_address, false});
+          i8* ida_sig = signature_generator.render(SIGNATURE_STYLE_IDA);
+          if(ida_sig == nullptr){
+            error("[Fusion] fatal error rendering signature (1)\n");
+            break;
+          }
+
+          std::vector<ea_t> search_result = find(ida_sig, {true, true, target_addr, last_found_address, false});
+          free(ida_sig);
           if(search_result.empty())
             break;
 
@@ -195,6 +202,11 @@ namespace n_signature{
 
       // Create a render of the signature in the selected style
       i8* signature = signature_generator.render(style);
+
+      if(signature == nullptr){
+        error("[Fusion] fatal error rendering signature (2)\n");
+        return;
+      }
 
       // Display
       msg("[Fusion] %s\n", signature);
