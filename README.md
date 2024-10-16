@@ -10,12 +10,11 @@ IDA-Fusion was developed to address the lack of stable and reliable signature sc
 
 **IDA-Fusion** stands apart because it is:
 
-- **GCC-Powered**: Uses GCC to ensure reliability and compatibility.
-- **Efficient**: Implements optimized algorithms for both signature creation and scanning.
-- **Unique and Compact**: Guarantees signature uniqueness while minimizing size.
-- **Fast**: Rapidly searches through large binaries.
-- **Flexible**: Allows searching using both IDA and custom code signatures.
-- **User-Friendly**: Auto-jumps to found signatures, copies created signatures to the clipboard automatically, and minimizes bloat for a streamlined experience.
+- **GCC-Powered**: Built with GCC for reliability and compatibility.
+- **Optimized and Fast**: Efficient algorithms for signature creation and scanning, quickly handling large binaries.
+- **Compact and Unique**: Keeps signatures small without sacrificing uniqueness.
+- **Versatile**: Supports IDA-style, code-style, CRC-32, and FNV1-A signature generation.
+- **User-Friendly**: Auto-jumps to matches, copies signatures to clipboard, and keeps things streamlined.
 
 ---
 
@@ -31,10 +30,8 @@ In the image above, the highlighted portion shows what is omitted when creating 
 ## What's Next for IDA-Fusion?
 We're committed to enhancing and optimizing IDA-Fusion with new features and performance improvements. We're also open to contributions from the community. Some planned future features include:
 
-- **CRC Signature Generation**: Generate signatures based on CRC checksums.
 - **Reverse Searching**: Create even smaller signatures by analyzing from the end (optional feature).
 - **Reference-Based Signatures**: Generate signatures based on references (optional feature).
-- ~~**Configuration Dialog**~~: Toggle future and experimental features.
 - **More Features**: We're continuously brainstorming additional features to enhance IDA-Fusion.
 
 ---
@@ -56,7 +53,7 @@ We're committed to enhancing and optimizing IDA-Fusion with new features and per
 
 1. **Download GCC**: Install GCC, preferably using MSYS2.
 2. **Extract SDK**: Extract the contents of IDA's `idasdk7.x.zip` into the `sdk` folder within IDA-Fusion.
-3. **Modify Copy Directories**: To avoid confusion, update the copy directories in `compile32.bat` and `compile64.bat`.
+3. **Modify Copy Directories**: To avoid confusion, update the copy directories in `compile.bat`.
 4. **Run the Compilation Script**: Run `compile.bat` to compile IDA-Fusion for both x86 and x64 versions of IDA.
 
 ---
