@@ -71,11 +71,11 @@ public:
     i8* sig = (i8*)malloc(sig_len);
     memset(sig, 0, sig_len);
 
-    if (style == SIGNATURE_STYLE_FNV1A){
+    if (style == SIGNATURE_STYLE_FNV1A)
       qsnprintf(sig, sig_len, "0x%08X", generate_fnv1a_hash());
-    } else if (style == SIGNATURE_STYLE_CRC32){
+    else if (style == SIGNATURE_STYLE_CRC32)
       qsnprintf(sig, sig_len, "0x%08X", generate_crc32_hash());
-    }else{
+    else{
       for(u32 i = 0; i < bytes.size(); i++){
         if((strlen(sig) + sig_len_per_byte) > sig_len){
           warning("[Fusion] `0x%llX` Has a bugged signature buffer (0)", sig);
