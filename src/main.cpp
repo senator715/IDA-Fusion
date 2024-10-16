@@ -43,10 +43,10 @@ bool idaapi plugin_run(size_t arg){
       break;
     }
     case 4:{
-      static i8 signature_to_find[1024];
+      static i8 signature_to_find[8192];
       if(!ask_form(
         "Fusion — Enter CODE/IDA signature\n"
-        "<Signature:A5:1024:100>"
+        "<Signature:A5:8192:100>"
       , &signature_to_find))
         break;
 
